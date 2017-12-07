@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MailSoft</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Configuración</string>
+    <string name="Unread">Bandeja de Entrada</string>
+    <string name="BandejaSalida">Bandeja de Salida</string>
+    <string name="BandejaEntrada">Bandeja de Entrada</string>
+    <string name="SPAM">Correo no deseado</string>
+    <string name="CerrarSesion">Cerrar Sesión</string>
+    <string name="IniciarSesion">Iniciar Sesión</string>
+    <string name="NewMail">Nuevo Mensaje</string>
+</resources>

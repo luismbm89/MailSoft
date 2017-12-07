@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/BE"
+            android:icon="@drawable/ic_call_received_black_24dp"
+            android:title="@string/BandejaEntrada" />
+        <item
+            android:id="@+id/BS"
+            android:icon="@drawable/ic_send_black_24dp"
+            android:title="@string/BandejaSalida" />
+        <item
+            android:id="@+id/SPAM"
+            android:icon="@drawable/ic_not_interested_black_24dp"
+            android:title="@string/SPAM" />
+        <item
+            android:id="@+id/NM"
+            android:icon="@drawable/ic_fiber_new_black_24dp"
+            android:title="@string/NewMail" />
+    </group>
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/IS"
+                android:icon="@drawable/login_as_user"
+                android:title="@string/IniciarSesion" />
+            <item
+                android:id="@+id/CS"
+                android:icon="@drawable/ic_close_black_24dp"
+                android:title="@string/CerrarSesion" />
+        </menu>
+    </item>
+
+</menu>
