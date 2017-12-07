@@ -1,7 +1,10 @@
 package com.app.luisbolanos.mailsoft;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class Message extends AppCompatActivity {
@@ -22,22 +25,24 @@ public class Message extends AppCompatActivity {
                 txtmsgAsunto= null;
                 txtmsgMensaje= null;
             } else {
-                txtmsgDe= extras.getString("de");
-                txtmsgPara= extras.getString("para");
+                txtmsgPara= extras.getString("de");
                 txtmsgAsunto= extras.getString("asunto");
                 txtmsgMensaje= extras.getString("mensaje");
             }
         } else {
-            txtmsgDe= (String) savedInstanceState.getSerializable("de");
-            txtmsgPara= (String) savedInstanceState.getSerializable("para");
+            txtmsgPara= (String) savedInstanceState.getSerializable("de");
             txtmsgAsunto= (String) savedInstanceState.getSerializable("asunto");
             txtmsgMensaje= (String) savedInstanceState.getSerializable("mensaje");
         }
-        TextView txtDe=(TextView)findViewById(R.id.txtmsgDe);
+        SharedPreferences prefs =
+                getSharedPreferences("Configuracion", Context.MODE_PRIVATE);
+        String email = prefs.getString("email", "");
+        EditText txtemail=(EditText)findViewById(R.id.txtmsgDe);
+        txtemail.setText(email);
+        txtemail.setEnabled(false);
         TextView txtPara=(TextView)findViewById(R.id.txtMsgPara);
         TextView txtAsunto=(TextView)findViewById(R.id.txtmsgAsunto);
         TextView txtMensaje=(TextView)findViewById(R.id.txtMsgBody);
-        txtDe.setText(txtmsgDe);
         txtPara.setText(txtmsgPara);
         txtAsunto.setText("RE:"+  txtmsgAsunto);
         txtMensaje.setText(txtmsgMensaje);

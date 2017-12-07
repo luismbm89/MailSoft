@@ -124,16 +124,6 @@ public class MainActivity extends AppCompatActivity
     }catch(Exception ex){}
         }
     }
-    private void createTable() {
-// Get the table instance to use.
-        mToDoTable = mClient.getTable(Mail.class);
-// Create an adapter to bind the items with the view.
-        mAdapter = new MailAdapter(this, R.layout.content_main);
-        ListView listViewToDo = (ListView) findViewById(R.id.listViewToDo);
-        listViewToDo.setAdapter(mAdapter);
-// Load the items from Azure.
-        refreshItemsFromTable();
-    }
     private void refreshItemsFromTable() {
 
         // Get the items that weren't marked as completed and add them in the
