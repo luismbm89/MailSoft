@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -53,18 +54,14 @@ public class MainActivity extends AppCompatActivity
     private MobileServiceTable<Mail> mToDoTable;
     private ProgressBar mProgressBar;
     private MailAdapter mAdapter;
+    private String email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-        mProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
-
-        // Initialize the progress bar
-        mProgressBar.setVisibility(ProgressBar.GONE);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +80,23 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
+
+        // Initialize the progress bar
+        mProgressBar.setVisibility(ProgressBar.GONE);
+        SharedPreferences prefs =
+                getSharedPreferences("Configuracion",Context.MODE_PRIVATE);
+        email = prefs.getString("email", "");
+        if(email.equals("")){
+            Intent intent = new Intent(getApplicationContext(), Configuracion.class);
+            startActivity(intent);
+            Context context = getApplicationContext();
+            CharSequence text = "Debes registrar tu nombre y un correo electrónico";
+            int duration = Toast.LENGTH_LONG;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }else{
         try {
             // Create the Mobile Service Client instance, using the provided
 
@@ -108,6 +122,7 @@ public class MainActivity extends AppCompatActivity
             refreshItemsFromTable();
 
     }catch(Exception ex){}
+        }
     }
     private void createTable() {
 // Get the table instance to use.

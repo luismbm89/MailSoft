@@ -2,6 +2,7 @@ package com.app.luisbolanos.mailsoft;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by luis.bolanos on 6/12/2017.
@@ -59,10 +62,19 @@ public class MailAdapter  extends ArrayAdapter<Mail> {
 
             @Override
             public void onClick(View arg0) {
-                String de=currentItem.getFrom();
+                String para=currentItem.getTo();
                 String asunto=currentItem.getSubject();
+                String de=currentItem.getFrom();
+                String mensaje=currentItem.getMessage();
                 String msg=de+" --> "+asunto;
-                Toast.makeText(arg0.getContext(), msg, Toast.LENGTH_LONG).show();
+               // Toast.makeText(arg0.getContext(), msg, Toast.LENGTH_LONG).show();
+                // TODO Auto-generated method stub
+                Intent intent=new Intent(arg0.getContext(),Message.class);
+                intent.putExtra("de", de);
+                intent.putExtra("para", para);
+                intent.putExtra("asunto", asunto);
+                intent.putExtra("mensaje", mensaje);
+                arg0.getContext().startActivity(intent);
             }
         });
 

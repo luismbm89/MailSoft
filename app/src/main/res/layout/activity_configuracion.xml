@@ -7,28 +7,28 @@
     tools:context="com.app.luisbolanos.mailsoft.Configuracion">
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/txtNombre"
         android:layout_width="339dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="28dp"
         android:layout_marginTop="52dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Nombre"
+        android:hint="Nombre"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText6"
+        android:id="@+id/txtCorreo"
         android:layout_width="334dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="28dp"
         android:layout_marginTop="36dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Correo"
+        android:hint="Correo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText5" />
+        app:layout_constraintTop_toBottomOf="@+id/txtNombre" />
 
     <Button
         android:id="@+id/button2"
@@ -38,5 +38,6 @@
         android:layout_marginTop="40dp"
         android:text="Guardar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText6" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCorreo"
+        android:onClick="Guardar"/>
 </android.support.constraint.ConstraintLayout>
