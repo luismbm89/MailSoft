@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -117,9 +118,31 @@ public class MainActivity extends AppCompatActivity
             });
             mToDoTable = mClient.getTable(Mail.class);
             mAdapter = new MailAdapter(this, R.layout.listview);
-            ListView listViewToDo = (ListView) findViewById(R.id.listViewToDo);
+           final  ListView listViewToDo = (ListView) findViewById(R.id.listViewToDo);
             listViewToDo.setAdapter(mAdapter);
             refreshItemsFromTable();
+            listViewToDo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Mail omail =(Mail)listViewToDo.getItemAtPosition(i);
+                    String  from=omail.getFrom();
+                    checkItem(omail);
+                    String para=omail.getTo();
+                    String asunto=omail.getSubject();
+                    String de=omail.getFrom();
+                    String mensaje=omail.getMessage();
+                    String msg=de+" --> "+asunto;
+                    // Toast.makeText(arg0.getContext(), msg, Toast.LENGTH_LONG).show();
+                    // TODO Auto-generated method stub
+                    Intent intent=new Intent(view.getContext(),Message.class);
+                    intent.putExtra("de", de);
+                    intent.putExtra("para", para);
+                    intent.putExtra("asunto", asunto);
+                    intent.putExtra("mensaje", mensaje);
+                    view.getContext().startActivity(intent);
+
+                }
+            });
 
     }catch(Exception ex){}
         }
@@ -279,7 +302,48 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+    public void checkItem(final Mail item) {
+        if (mClient == null) {
+            return;
+        }
 
+        // Set the item as completed and update it in the table
+        if (item.getRead()){
+            item.setRead(false);}
+        else{
+            item.setRead(true);
+        }
+
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+
+                    checkItemInTable(item);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (item.getRead()) {
+                                mAdapter.remove(item);
+                            }
+                            refreshItemsFromTable();
+                        }
+                    });
+                } catch (final Exception e) {
+                    createAndShowDialogFromTask(e, "Error");
+                }
+
+                return null;
+            }
+        };
+
+        runAsyncTask(task);
+
+    }
+
+    public void checkItemInTable(Mail item) throws ExecutionException, InterruptedException {
+        mToDoTable.update(item).get();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

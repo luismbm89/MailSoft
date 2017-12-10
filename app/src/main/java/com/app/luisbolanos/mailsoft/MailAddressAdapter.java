@@ -50,7 +50,6 @@ public class MailAddressAdapter extends ArrayAdapter<EmailAddress> {
         row.setTag(currentItem);
         final TextView tvDe = (TextView) row.findViewById(R.id.tvDe);
         final TextView tvAsunto = (TextView) row.findViewById(R.id.tvAsunto);
-        final CheckBox Estado = (CheckBox) row.findViewById(R.id.checkBox);
         tvDe.setText(currentItem.getEmail());
         tvAsunto.setText(currentItem.getId());
         return row;
