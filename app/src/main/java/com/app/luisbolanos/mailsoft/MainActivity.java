@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -55,12 +56,16 @@ public class MainActivity extends AppCompatActivity
     private MobileServiceTable<Mail> mToDoTable;
     private ProgressBar mProgressBar;
     private MailAdapter mAdapter;
-    private String email;
+    private String email,de,from,para,mensaje;
+    private int indice;
+    private  Button btn;
+    private  ListView listViewToDo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        btn=findViewById(R.id.button3);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
+btn.setVisibility(View.INVISIBLE);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -118,13 +123,14 @@ public class MainActivity extends AppCompatActivity
             });
             mToDoTable = mClient.getTable(Mail.class);
             mAdapter = new MailAdapter(this, R.layout.listview);
-           final  ListView listViewToDo = (ListView) findViewById(R.id.listViewToDo);
+            listViewToDo= (ListView) findViewById(R.id.listViewToDo);
             listViewToDo.setAdapter(mAdapter);
             refreshItemsFromTable();
             listViewToDo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Mail omail =(Mail)listViewToDo.getItemAtPosition(i);
+
+                /*    Mail omail =(Mail)listViewToDo.getItemAtPosition(i);
                     String  from=omail.getFrom();
                     checkItem(omail);
                     String para=omail.getTo();
@@ -139,13 +145,30 @@ public class MainActivity extends AppCompatActivity
                     intent.putExtra("para", para);
                     intent.putExtra("asunto", asunto);
                     intent.putExtra("mensaje", mensaje);
-                    view.getContext().startActivity(intent);
-
+                    view.getContext().startActivity(intent);*/
+                    indice=i;
+                    btn.setVisibility(View.VISIBLE);
                 }
             });
 
     }catch(Exception ex){}
         }
+    }
+    public void Responder(View v){
+        Mail omail =(Mail)listViewToDo.getItemAtPosition(indice);
+        String  from=omail.getFrom();
+        checkItem(omail);
+        String para=omail.getTo();
+        String asunto=omail.getSubject();
+        String de=omail.getFrom();
+        String mensaje=omail.getMessage();
+        String msg=de+" --> "+asunto;
+        Intent intent=new Intent(this,Message.class);
+        intent.putExtra("de", de);
+        intent.putExtra("para", para);
+        intent.putExtra("asunto", asunto);
+        intent.putExtra("mensaje", mensaje);
+        this.startActivity(intent);
     }
     private void refreshItemsFromTable() {
 
@@ -371,7 +394,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        /*int id = item.getItemId();
 
         if (id == R.id.SPAM) {
             // Handle the camera action
@@ -393,7 +416,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         }
-
+*/
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

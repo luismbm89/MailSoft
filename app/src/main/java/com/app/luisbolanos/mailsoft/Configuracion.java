@@ -3,10 +3,13 @@ package com.app.luisbolanos.mailsoft;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,8 +26,10 @@ import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.microsoft.windowsazure.mobileservices.http.ServiceFilter;
 import com.microsoft.windowsazure.mobileservices.http.ServiceFilterRequest;
 import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class Configuracion extends AppCompatActivity {
@@ -34,6 +39,8 @@ public class Configuracion extends AppCompatActivity {
     public static final String USERIDPREF = "uid";
     public static final String TOKENPREF = "tkn";
     private MobileServiceClient mClient;
+    private ArrayAdapter<String> mAdapter;
+    private MobileServiceTable<EmailAddress> mToDoTable;
     private ProgressBar mProgressBar;
 
     @Override
@@ -67,6 +74,50 @@ public class Configuracion extends AppCompatActivity {
         EditText Correo=(EditText)findViewById(R.id.txtCorreo);
         Nombre.setText(nombre);
         Correo.setText(correo);
+    }
+    public void addItem() {
+        if (mClient == null) {
+            return;
+        }
+
+        // Create a new item
+        final EmailAddress item = new EmailAddress();
+        EditText mail =(EditText)findViewById(R.id.txtCorreo);
+item.setEmail(mail.getText().toString());
+        // Insert the new item
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    final EmailAddress entity = addItemInTable(item);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //if(!entity.isComplete()){
+                            mAdapter.add(entity.getEmail());
+                            // }
+                        }
+                    });
+                } catch (final Exception e) {
+                    createAndShowDialogFromTask(e, "Error");
+                }
+                return null;
+            }
+        };
+
+        runAsyncTask(task);
+    }
+    private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            return task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            return task.execute();
+        }
+    }
+    public EmailAddress addItemInTable(EmailAddress item) throws ExecutionException, InterruptedException {
+        EmailAddress entity = mToDoTable.insert(item).get();
+        return entity;
     }
     private class ProgressFilter implements ServiceFilter {
 
@@ -191,6 +242,10 @@ public class Configuracion extends AppCompatActivity {
         editor.putString("email", Correo.getText().toString());
         editor.putString("nombre", Nombre.getText().toString());
         editor.commit();
+        mToDoTable = mClient.getTable(EmailAddress.class);
+        mAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line);
+        addItem();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }
